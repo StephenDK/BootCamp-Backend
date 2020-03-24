@@ -6,7 +6,6 @@
   "scripts": {
     "start": "SET NODE_ENV=production & node server",
     "dev": "nodemon server"
-    
   },
   "repository": {
     "type": "git",
@@ -20,7 +19,8 @@
   "homepage": "https://github.com/StephenDK/BootCamp-Backend#readme",
   "dependencies": {
     "dotenv": "^8.2.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
