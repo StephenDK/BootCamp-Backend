@@ -3,12 +3,16 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 //custom logger
 //const logger = require('./middleware/logger')
-
-// route files
-const bootcamps = require('./routes/bootcamps');
+const connectDB = require('./config/db');
 
 //load env vars
 dotenv.config({ path: './config/config.env' });
+
+//connect to database
+connectDB();
+
+// route files
+const bootcamps = require('./routes/bootcamps');
 
 const app = express();
 
@@ -27,9 +31,14 @@ app.use('/api/v1/bootcamps', bootcamps);
 const PORT = process.env.PORT || 5000;
 
 
-app.listen(
+const server = app.listen(
     PORT, 
     console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
     );
 
-
+//handle unhandled rejection
+process.on('unhandledRejection', (err, promise) => {
+    console.log(`ERROR: ${err.message}`)
+    //close server & exit process
+    server.close(() => process.exit(1));
+})
