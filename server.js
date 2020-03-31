@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const colors = require('colors');
+const errorHandler = require('./middleware/error');
 //custom logger
 //const logger = require('./middleware/logger')
 const connectDB = require('./config/db');
@@ -12,13 +13,20 @@ dotenv.config({ path: './config/config.env' });
 //connect to database
 connectDB();
 
-// route files
-const bootcamps = require('./routes/bootcamps');
 
 const app = express();
 
+// import route files
+const bootcamps = require('./routes/bootcamps');
+//Mount routes to app
+app.use('/api/v1/bootcamps', bootcamps);
+
+// errorhandler middleware
+app.use(errorHandler);
+
 //body parser
 app.use(express.json());
+
 
 //dev logging middleware
 if (process.env.NODE_ENV === 'development') {
@@ -28,8 +36,6 @@ if (process.env.NODE_ENV === 'development') {
 //Below is just some homemade middleware
 // app.use(logger);
 
-//Mount routes to app
-app.use('/api/v1/bootcamps', bootcamps);
 
 
 const PORT = process.env.PORT || 5000;
