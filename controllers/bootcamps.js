@@ -40,8 +40,9 @@ exports.getBootcamp = async (req, res, next) => {
 // @route   POST /api/v1/bootcamps
 // @access  Private
 exports.createBootcamp = async (req, res, next) => {
-    //error handeling
+    //error handling
     try {
+        // console.log(req.body);
         const bootcamp = await Bootcamp.create(req.body);
     
         res.status(201).json({
@@ -53,8 +54,7 @@ exports.createBootcamp = async (req, res, next) => {
         //res.status(400).json({success: false });
         next(error);
     }
-
-}
+};
 
 // @desc    Update bootcamp
 // @route   PUT /api/v1/bootcamps/:id

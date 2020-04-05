@@ -15,17 +15,18 @@ connectDB();
 
 
 const app = express();
+app.use(express.json());
 
 // import route files
 const bootcamps = require('./routes/bootcamps');
 //Mount routes to app
 app.use('/api/v1/bootcamps', bootcamps);
 
+//body parser
+
 // errorhandler middleware
 app.use(errorHandler);
 
-//body parser
-app.use(express.json());
 
 
 //dev logging middleware
