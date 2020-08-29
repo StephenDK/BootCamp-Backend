@@ -8,8 +8,21 @@ const geocoder = require('../utils/geocoder');
 // @route   GET /api/v1/bootcamps
 // @access  Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-    
-    const bootcamps = await Bootcamp.find();
+    // Getting query params
+    // Example of a query params /api/v1/bootcamps/?location.state=MA&housing=true
+    console.log(req.query);
+
+    // Query mongodb using greater then and less then
+    let query;
+
+    let queryStr = JSON.stringify(req.query);
+
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+    console.log(queryStr);
+
+    query = Bootcamp.find(JSON.parse(queryStr));
+
+    const bootcamps = await query;
 
     res
         .status(200)
