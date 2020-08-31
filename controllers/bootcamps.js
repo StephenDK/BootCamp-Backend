@@ -18,7 +18,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     // console.log('18. reqQuery ', reqQuery)
     
     // Fields to exclude
-    const removeFields = ['select', 'sort']
+    const removeFields = ['select', 'sort', 'page', 'limit'];
     // console.log(removeFields);
     // Loop over removeFields and delete them from reqQuery
     removeFields.forEach(param => delete reqQuery[param]);
@@ -52,10 +52,13 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     // console.log(Object.keys(query));
 
     // console.log('req.query.select: ', req.query.select);
+
     //Select Felds
     if (req.query.select) {
         // URL selection example
         // /api/v1/bootcamps?select=name,description,housing
+        // URL with query using list above
+        // /api/v1/bootcamps?select=name,description,housing&averageCost[gte]=10000
         const fields = req.query.select.split(',').join(' ');
         // console.log('57. fields: ',fields);
         // console.log(query);
@@ -74,11 +77,38 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
         query = query.sort('-createdAt');
     }
 
+    // Pagination ie. return a selected number of docunents for specified page
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 25;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const total = await Bootcamp.countDocuments();
+
+    query = query.skip(startIndex).limit(limit);
+
     const bootcamps = await query;
-    console.log(bootcamps)
+    // console.log(bootcamps)
+
+    // Pagination result
+    const pagination = {};
+
+    if (endIndex < total) {
+        pagination.next = {
+            page: page + 1,
+            limit
+        }
+    }
+    if (startIndex > 0) {
+        pagination.prev = {
+            page: page - 1,
+            limit
+        }
+    }
+
+
     res
         .status(200)
-        .json({ success: true, count: bootcamps.length, data: bootcamps});
+        .json({ success: true, count: bootcamps.length, pagination, data: bootcamps});
 
 });
 
