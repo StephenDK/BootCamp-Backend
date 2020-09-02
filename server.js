@@ -19,9 +19,10 @@ app.use(express.json());
 
 // import route files
 const bootcamps = require('./routes/bootcamps');
+const courses = require('./routes/courses');
 //Mount routes to app
 app.use('/api/v1/bootcamps', bootcamps);
-
+app.use('/api/v1/courses', courses);
 //body parser
 
 // errorhandler middleware

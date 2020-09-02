@@ -9,6 +9,11 @@ const { getBootcamp,
 
 const router = express.Router();
 
+// Include other resource routers
+const courseRouter = require('./courses');
+// re-route into other resource routers
+router.use('/:bootcampId/courses', courseRouter);
+
 // CRUD Routes Below
 router
     .route('/')
