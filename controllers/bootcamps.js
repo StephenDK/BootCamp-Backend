@@ -47,9 +47,8 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     // console.log('47. QUERY STRING: AFTER', typeof(queryStr), queryStr);
     
 
-    // console.log('51. QUERYSTR: ', JSON.parse(queryStr));
-    query = Bootcamp.find(JSON.parse(queryStr));
-    // console.log(Object.keys(query));
+    query = Bootcamp.find(JSON.parse(queryStr)).populate('courses');
+    // The populate with courses is a mongoose VirtualType. its setup in ./models.Bootcamp.js
 
     // console.log('req.query.select: ', req.query.select);
 
@@ -170,14 +169,21 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
 // @route   DELETE /api/v1/bootcamps/:id
 // @access  Private
 exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
-    
-    const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
-    
+    // The pre middleware for deleting courses associated with a bootcamp
+    // wont work with findByIdAndDelete
+    // const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
+    const bootcamp = await Bootcamp.findById(req.params.id);
+
     if (!bootcamp) {
         return next(
             new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
         );
     }
+
+    // Then we call .remove on the bootcamps
+    // The remove method will trigger the cascading remove of courses when a bootcamp
+    // is deleted
+    bootcamp.remove();
 
     res
         .status(200)
