@@ -4,7 +4,8 @@ const { getBootcamp,
      updateBootcamp, 
      createBootcamp, 
      deleteBootcamp,
-     getBootcampsInRadius
+     getBootcampsInRadius,
+     bootcampPhotoUpload
     } = require('../controllers/bootcamps')
 
 const router = express.Router();
@@ -30,5 +31,8 @@ router
 router
     .route('/radius/:zipcode/:distance')
     .get(getBootcampsInRadius);
+
+// Route to upload a file
+router.route('/:id/photo').put(bootcampPhotoUpload)
 
 module.exports = router;

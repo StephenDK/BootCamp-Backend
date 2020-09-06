@@ -2,6 +2,8 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const colors = require('colors');
+const path = require('path');
+const fileupload = require('express-fileupload');
 const errorHandler = require('./middleware/error');
 //custom logger
 //const logger = require('./middleware/logger')
@@ -17,6 +19,17 @@ connectDB();
 const app = express();
 app.use(express.json());
 
+//dev logging middleware
+if (process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev'));
+}
+
+// File uploading
+app.use(fileupload());
+
+// set static folder
+app.use(express.static(path.join(__dirname, 'public')));
+
 // import route files
 const bootcamps = require('./routes/bootcamps');
 const courses = require('./routes/courses');
@@ -30,10 +43,6 @@ app.use(errorHandler);
 
 
 
-//dev logging middleware
-if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'));
-}
 
 //Below is just some homemade middleware
 // app.use(logger);
