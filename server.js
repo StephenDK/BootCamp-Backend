@@ -17,6 +17,7 @@ connectDB();
 
 
 const app = express();
+//body parser
 app.use(express.json());
 
 //dev logging middleware
@@ -33,10 +34,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 // import route files
 const bootcamps = require('./routes/bootcamps');
 const courses = require('./routes/courses');
+const auth = require('./routes/auth');
 //Mount routes to app
 app.use('/api/v1/bootcamps', bootcamps);
 app.use('/api/v1/courses', courses);
-//body parser
+app.use('/api/v1/auth', auth);
+
 
 // errorhandler middleware
 app.use(errorHandler);
