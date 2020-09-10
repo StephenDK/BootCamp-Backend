@@ -11,6 +11,9 @@ const { getBootcamp,
 const advancedResults = require('../middleware/advancedResults');
 const Bootcamp = require('../models/Bootcamp');
 
+// Protect route middleware
+const { protect } = require('../middleware/auth');
+
 const router = express.Router();
 
 // Include other resource routers
@@ -22,13 +25,13 @@ router.use('/:bootcampId/courses', courseRouter);
 router
     .route('/')
     .get(advancedResults(Bootcamp, 'courses'), getBootcamps)
-    .post(createBootcamp);
+    .post(protect, createBootcamp);
 
 router
     .route('/:id')
     .get(getBootcamp)
-    .put(updateBootcamp)
-    .delete(deleteBootcamp);
+    .put(protect, updateBootcamp)
+    .delete(protect, deleteBootcamp);
 
 // Geocode bootcamps within radius Below
 router
@@ -36,6 +39,6 @@ router
     .get(getBootcampsInRadius);
 
 // Route to upload a file
-router.route('/:id/photo').put(bootcampPhotoUpload)
+router.route('/:id/photo').put(protect, bootcampPhotoUpload)
 
 module.exports = router;

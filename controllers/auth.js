@@ -68,7 +68,7 @@ const sendTokenResponse = (user, statusCode, res) => {
         httpOnly: true
     };
 
-    if (process.env.NODE_ENV) {
+    if (process.env.NODE_ENV === 'production') {
         options.secure = true;
     }
 
@@ -81,3 +81,15 @@ const sendTokenResponse = (user, statusCode, res) => {
         });
 
 }
+
+// @desc    Get current logged in user
+// @route   GET /api/v1/auth/me
+// @access  private
+exports.getMe = asyncHandler(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+
+    res.status(200).json({
+        success: true,
+        data: user
+    })
+})
