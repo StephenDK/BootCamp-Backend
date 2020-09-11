@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const asyncHandler = require('./async');
 const errorResponse = require('../utils/errorResponse');
 const User = require('../models/User');
+const ErrorResponse = require('../utils/errorResponse');
 
 // Protect routes
 exports.protect = asyncHandler(async(req, res, next) => {
@@ -39,3 +40,14 @@ exports.protect = asyncHandler(async(req, res, next) => {
 })
 
 // head to routes/bootcamp to implement protect middleware
+
+
+// Grant access to specific roles
+exports.authorize = (...roles) => {
+    return (req, res, next) => {
+        if (!roles.includes(req.user.role)) {
+            return next(new ErrorResponse(`User role ${req.user.role} is not authorized to access this route`, 403))
+        }
+        next();
+    }
+}
