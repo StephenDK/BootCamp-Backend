@@ -99,6 +99,13 @@ const BootcampSchema = new mongoose.Schema(
     type: Date,
     default: Date.now
   }, 
+  // The code below asscoiates a user with a bookcamp
+  // head over to bootcamp controller for setup
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: true
+}
 }, {
   toJSON: { virtuals: true},
   toObject: { virtuals: true }
