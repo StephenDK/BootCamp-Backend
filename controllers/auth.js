@@ -23,7 +23,7 @@ exports.register = asyncHandler(async (req, res, next) => {
     // Replace With
     sendTokenResponse(user, 200, res);
     
-})
+});
 
 // @desc    Login user
 // @route   POST /api/v1/auth/login
