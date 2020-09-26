@@ -3,6 +3,9 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const colors = require('colors');
 const path = require('path');
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
+const xss = require('xss-clean');
 const fileupload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
 const errorHandler = require('./middleware/error');
@@ -32,6 +35,16 @@ if (process.env.NODE_ENV === 'development') {
 // File uploading
 app.use(fileupload());
 
+// Use the express-mongo-sanitize package middlware
+// to prent noSQL injections
+app.use(mongoSanitize())
+
+//  Set security headers
+app.use(helmet());
+
+// Prevent XSS attacks ie embeding html tags into the db
+app.use(xss());
+
 // set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -55,13 +68,11 @@ app.use('/api/v1/reviews', reviews);
 app.use(errorHandler);
 
 
-
 //Below is just some homemade middleware
 // app.use(logger);
 
 
-
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 6000;
 
 
 const server = app.listen(
