@@ -55,10 +55,14 @@ app.use('/api/v1/reviews', reviews);
 app.use(errorHandler);
 
 
+
 //Below is just some homemade middleware
 // app.use(logger);
 
+
+
 const PORT = process.env.PORT || 5000;
+
 
 const server = app.listen(
     PORT, 
